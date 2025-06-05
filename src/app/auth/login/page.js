@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { login } from '../apiAuth';
 import Layout from '../../../components/Layout';
@@ -13,6 +13,34 @@ export default function Login() {
   const [showVerify, setShowVerify] = useState(false);
   const [verifyCode, setVerifyCode] = useState('');
   const router = useRouter();
+
+  // Redirige si ya hay sesión guardada
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('token');
+      const user = localStorage.getItem('user');
+      if (token && user) {
+        router.replace('/dashboard');
+      }
+    }
+  }, [router]);
+
+  // Maneja el callback de Google (token y datos en query)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get('token');
+      const idusuarios = params.get('idusuarios');
+      const nombre = params.get('nombre');
+      const email = params.get('email');
+      const tipo = params.get('tipo');
+      if (token && idusuarios && nombre && email && tipo) {
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify({ idusuarios, nombre, email, tipo }));
+        router.replace('/dashboard');
+      }
+    }
+  }, [router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -89,7 +117,7 @@ export default function Login() {
                 className="w-full p-2 rounded border border-gray-300"
               />
             </div>
-            <div className="button-group mt-6">
+            <div className="button-group mt-6 flex flex-col gap-2">
               <button type="submit" className="btn-rounded btn-blue">
                 Acceder
               </button>
@@ -99,6 +127,21 @@ export default function Login() {
                 onClick={() => router.push('/auth/register')}
               >
                 Registrarse
+              </button>
+              {/* Botón Google debajo de Registrarse */}
+              <button
+                type="button"
+                className="btn-rounded btn-google w-full"
+                style={{
+                  background: '#fff',
+                  color: '#222',
+                  border: '1px solid #ccc',
+                  fontWeight: 'bold'
+                }}
+                onClick={() => window.location.href = '/api/auth/google'}
+              >
+                <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" style={{ width: 20, marginRight: 8, display: 'inline-block', verticalAlign: 'middle' }} />
+                Iniciar sesión con Google
               </button>
             </div>
           </form>
@@ -117,6 +160,7 @@ export default function Login() {
             </button>
           </form>
         )}
+        {/* Botón Recuperar contraseña debajo del de Google */}
         <p className="mt-6 text-center">
           <button
             type="button"

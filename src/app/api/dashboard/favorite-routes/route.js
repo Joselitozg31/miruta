@@ -1,18 +1,21 @@
 import { NextResponse } from 'next/server';
 import mysql from 'mysql2/promise';
+import { getMysqlConfig } from '../../_db';
 
-export async function GET() {
-  // Obtiene las rutas favoritas del usuario actual (puedes filtrar por usuario si tienes auth)
-  const connection = await mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'miruta',
-  });
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const usuarioId = searchParams.get('usuarioId');
 
-  // Aquí deberías obtener el usuario autenticado, para ejemplo se devuelven todas
+  if (!usuarioId) {
+    return NextResponse.json({ message: 'usuarioId requerido' }, { status: 400 });
+  }
+
+  const connection = await mysql.createConnection(getMysqlConfig());
+
+  // Solo devuelve las favoritas del usuario
   const [rows] = await connection.execute(
-    `SELECT usuarioId, rutaId FROM usuariorutafavorita`
+    `SELECT rutaId FROM usuariorutafavorita WHERE usuarioId = ?`,
+    [usuarioId]
   );
 
   await connection.end();
@@ -27,12 +30,7 @@ export async function POST(request) {
     return NextResponse.json({ message: 'Faltan datos' }, { status: 400 });
   }
 
-  const connection = await mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'miruta',
-  });
+  const connection = await mysql.createConnection(getMysqlConfig());
 
   // Evita duplicados
   await connection.execute(
@@ -52,12 +50,7 @@ export async function DELETE(request) {
     return NextResponse.json({ message: 'Faltan datos' }, { status: 400 });
   }
 
-  const connection = await mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'miruta',
-  });
+  const connection = await mysql.createConnection(getMysqlConfig());
 
   await connection.execute(
     `DELETE FROM usuariorutafavorita WHERE usuarioId = ? AND rutaId = ?`,

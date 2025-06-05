@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import mysql from 'mysql2/promise';
+import { getMysqlConfig } from '../../_db';
 
 export async function GET(request) {
   // Obtén el idusuarios desde la query (?id=) o desde headers (mejor si usas JWT real)
@@ -11,12 +12,7 @@ export async function GET(request) {
   }
 
   try {
-    const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'miruta',
-    });
+    const connection = await mysql.createConnection(getMysqlConfig());
 
     const [rows] = await connection.execute(
       `SELECT idusuarios, nombre, apellido1, apellido2, nombreusuario, email FROM usuarios WHERE idusuarios = ?`,
@@ -43,12 +39,7 @@ export async function PUT(request) {
       return NextResponse.json({ message: 'Faltan campos obligatorios' }, { status: 400 });
     }
 
-    const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'miruta',
-    });
+    const connection = await mysql.createConnection(getMysqlConfig());
 
     if (password) {
       await connection.execute(

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import mysql from 'mysql2/promise';
+import { getMysqlConfig } from '../../_db';
 
 export async function POST(request) {
   try {
@@ -9,12 +10,7 @@ export async function POST(request) {
       return NextResponse.json({ message: 'Faltan datos' }, { status: 400 });
     }
 
-    const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'miruta',
-    });
+    const connection = await mysql.createConnection(getMysqlConfig());
 
     // Busca el usuario y verifica el código
     const [rows] = await connection.execute(

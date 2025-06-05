@@ -15,11 +15,13 @@ export default function Usuario() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        // Extrae el idusuarios del token simulado en localStorage
+        // Extrae el idusuarios del token simulado o google en localStorage
         const token = localStorage.getItem('token');
         let id = '';
         if (token && token.startsWith('token-simulado-')) {
           id = token.replace('token-simulado-', '');
+        } else if (token && token.startsWith('token-google-')) {
+          id = token.replace('token-google-', '');
         }
         if (!id) {
           setError('No se ha podido identificar el usuario.');
@@ -105,13 +107,13 @@ export default function Usuario() {
             <span className="font-semibold">Nombre:</span> {user.nombre}
           </div>
           <div className="user-data-row">
-            <span className="font-semibold">Primer apellido:</span> {user.apellido1}
+            <span className="font-semibold">Primer apellido:</span> {user.apellido1 || ''}
           </div>
           <div className="user-data-row">
-            <span className="font-semibold">Segundo apellido:</span> {user.apellido2}
+            <span className="font-semibold">Segundo apellido:</span> {user.apellido2 || ''}
           </div>
           <div className="user-data-row">
-            <span className="font-semibold">Nombre de usuario:</span> {user.nombreusuario}
+            <span className="font-semibold">Nombre de usuario:</span> {user.nombreusuario || ''}
           </div>
           <div className="user-data-row">
             <span className="font-semibold">Email:</span> {user.email}

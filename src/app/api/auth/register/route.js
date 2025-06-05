@@ -3,6 +3,7 @@ import mysql from 'mysql2/promise';
 import crypto from 'crypto';
 import mailjet from 'node-mailjet';
 import jwt from 'jsonwebtoken';
+import { getMysqlConfig } from '../../_db';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'A9f$2kL!zQw8@xP0#rT7^vB6&nM3*eS1%jH4+uY5=GdC8pL0sW9zX2qV7bN6mK3';
 
@@ -17,12 +18,7 @@ export async function POST(request) {
     // Encripta la contraseña en el backend usando SHA-256
     const hash = crypto.createHash('sha256').update(password).digest('hex');
 
-    const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'miruta',
-    });
+    const connection = await mysql.createConnection(getMysqlConfig());
 
     // Verifica si el email ya existe
     const [existing] = await connection.execute(

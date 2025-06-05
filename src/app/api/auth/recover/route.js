@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import mysql from 'mysql2/promise';
 import mailjet from 'node-mailjet';
+import { getMysqlConfig } from '../../_db';
 
 // Usa las variables de entorno correctas para Mailjet
 const MJ_APIKEY_PUBLIC = process.env.MAILJET_API_KEY;
@@ -35,12 +36,7 @@ export async function POST(request) {
 
   let connection;
   try {
-    connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'miruta',
-    });
+    connection = await mysql.createConnection(getMysqlConfig());
 
     // Busca usuario
     const [rows] = await connection.execute(
@@ -111,12 +107,7 @@ export async function PUT(request) {
 
   let connection;
   try {
-    connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'miruta',
-    });
+    connection = await mysql.createConnection(getMysqlConfig());
 
     // Verifica código en la tabla codigo_recuperacion
     const [rows] = await connection.execute(
