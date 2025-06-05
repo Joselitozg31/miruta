@@ -135,47 +135,43 @@ export default function Autobus() {
       <div className="blue-box w-full">
         <h2 className="text-2xl font-bold mb-4 text-center">Autobuses</h2>
         {showForm && (
-          <form onSubmit={handleSubmit} className="w-full mb-6 flex flex-col gap-4 items-center">
-            <div className="w-full">
-              <label className="font-semibold block mb-1">Matricula:</label>
+          <form onSubmit={handleSubmit} className="form-vertical mb-6">
+            <div>
+              <label>Matricula:</label>
               <input
                 type="text"
                 name="placa"
                 value={form.placa}
                 onChange={handleChange}
                 required
-                className="w-full p-2 rounded border border-gray-300 text-black"
               />
             </div>
-            <div className="w-full">
-              <label className="font-semibold block mb-1">Modelo:</label>
+            <div>
+              <label>Modelo:</label>
               <input
                 type="text"
                 name="modelo"
                 value={form.modelo}
                 onChange={handleChange}
                 required
-                className="w-full p-2 rounded border border-gray-300 text-black"
               />
             </div>
-            <div className="w-full">
-              <label className="font-semibold block mb-1">Capacidad:</label>
+            <div>
+              <label>Capacidad:</label>
               <input
                 type="text"
                 name="capacidad"
                 value={form.capacidad}
                 onChange={handleChange}
                 required
-                className="w-full p-2 rounded border border-gray-300 text-black"
               />
             </div>
-            <div className="w-full">
-              <label className="font-semibold block mb-1">Estado:</label>
+            <div>
+              <label>Estado:</label>
               <select
                 name="estado"
                 value={form.estado}
                 onChange={handleChange}
-                className="w-full p-2 rounded border border-gray-300 text-black"
               >
                 <option value="activo">Activo</option>
                 <option value="inactivo">Inactivo</option>
@@ -183,7 +179,7 @@ export default function Autobus() {
                 <option value="retirado">Retirado</option>
               </select>
             </div>
-            <button type="submit" className="bg-blue-700 text-white px-4 py-2 rounded-lg">
+            <button type="submit">
               Guardar
             </button>
           </form>

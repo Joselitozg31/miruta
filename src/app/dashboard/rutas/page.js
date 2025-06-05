@@ -44,11 +44,23 @@ export default function Rutas() {
         } catch {}
       }
     }
-    // Cargar favoritas del usuario
-    fetch('/api/dashboard/favorite-routes')
-      .then(res => res.json())
-      .then(data => setFavoritas(data.map(f => f.rutaId)));
   }, []);
+
+  // Cargar favoritas solo cuando userId esté disponible
+  useEffect(() => {
+    if (userId) {
+      fetch(`/api/dashboard/favorite-routes?usuarioId=${userId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data)) {
+            setFavoritas(data.map(f => f.rutaId));
+          } else {
+            setFavoritas([]);
+          }
+        })
+        .catch(() => setFavoritas([]));
+    }
+  }, [userId]);
 
   const handleAddRuta = () => {
     setShowForm(!showForm);
@@ -174,74 +186,68 @@ export default function Rutas() {
       <div className="blue-box flex flex-col items-center justify-center box-main">
         <h2 className="section-title">Rutas</h2>
         {showForm && (
-          <form onSubmit={handleSubmit} className="w-full mb-6 flex flex-col gap-4 items-center">
-            <div className="w-full">
-              <label className="font-semibold block mb-1">Nombre:</label>
+          <form onSubmit={handleSubmit} className="form-vertical mb-6">
+            <div>
+              <label>Nombre:</label>
               <input
                 type="text"
                 name="nombre"
                 value={form.nombre}
                 onChange={handleChange}
                 required
-                className="w-full p-2 rounded border border-gray-300 text-black"
               />
             </div>
-            <div className="w-full">
-              <label className="font-semibold block mb-1">Descripción:</label>
+            <div>
+              <label>Descripción:</label>
               <input
                 type="text"
                 name="descripcion"
                 value={form.descripcion}
                 onChange={handleChange}
                 required
-                className="w-full p-2 rounded border border-gray-300 text-black"
               />
             </div>
-            <div className="w-full">
-              <label className="font-semibold block mb-1">Origen:</label>
+            <div>
+              <label>Origen:</label>
               <input
                 type="text"
                 name="origen"
                 value={form.origen}
                 onChange={handleChange}
                 required
-                className="w-full p-2 rounded border border-gray-300 text-black"
               />
             </div>
-            <div className="w-full">
-              <label className="font-semibold block mb-1">Destino:</label>
+            <div>
+              <label>Destino:</label>
               <input
                 type="text"
                 name="destino"
                 value={form.destino}
                 onChange={handleChange}
                 required
-                className="w-full p-2 rounded border border-gray-300 text-black"
               />
             </div>
-            <div className="w-full">
-              <label className="font-semibold block mb-1">Hora Inicio:</label>
+            <div>
+              <label>Hora Inicio:</label>
               <input
                 type="time"
                 name="horaInicio"
                 value={form.horaInicio}
                 onChange={handleChange}
                 required
-                className="w-full p-2 rounded border border-gray-300 text-black"
               />
             </div>
-            <div className="w-full">
-              <label className="font-semibold block mb-1">Hora Fin:</label>
+            <div>
+              <label>Hora Fin:</label>
               <input
                 type="time"
                 name="horaFin"
                 value={form.horaFin}
                 onChange={handleChange}
                 required
-                className="w-full p-2 rounded border border-gray-300 text-black"
               />
             </div>
-            <button type="submit" className="bg-blue-700 text-white px-4 py-2 rounded-lg">
+            <button type="submit">
               Guardar
             </button>
           </form>

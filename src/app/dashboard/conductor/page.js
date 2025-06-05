@@ -140,9 +140,9 @@ export default function Conductor() {
       <div className="blue-box w-full">
         <h2 className="text-2xl font-bold mb-4 text-center">Conductores</h2>
         {showForm && (
-          <form onSubmit={handleSubmit} className="w-full mb-6 flex flex-col gap-4 items-center">
-            <div className="w-full">
-              <label className="font-semibold block mb-1">Nombre:</label>
+          <form onSubmit={handleSubmit} className="form-vertical mb-6">
+            <div>
+              <label>Nombre:</label>
               <input
                 type="text"
                 name="nombre"
@@ -152,8 +152,8 @@ export default function Conductor() {
                 className="w-full p-2 rounded border border-gray-300 text-black"
               />
             </div>
-            <div className="w-full">
-              <label className="font-semibold block mb-1">Primer apellido:</label>
+            <div>
+              <label>Primer apellido:</label>
               <input
                 type="text"
                 name="apellido1"
@@ -163,8 +163,8 @@ export default function Conductor() {
                 className="w-full p-2 rounded border border-gray-300 text-black"
               />
             </div>
-            <div className="w-full">
-              <label className="font-semibold block mb-1">Segundo apellido:</label>
+            <div>
+              <label>Segundo apellido:</label>
               <input
                 type="text"
                 name="apellido2"
@@ -173,8 +173,8 @@ export default function Conductor() {
                 className="w-full p-2 rounded border border-gray-300 text-black"
               />
             </div>
-            <div className="w-full">
-              <label className="font-semibold block mb-1">DNI:</label>
+            <div>
+              <label>DNI:</label>
               <input
                 type="text"
                 name="dni"
@@ -184,8 +184,8 @@ export default function Conductor() {
                 className="w-full p-2 rounded border border-gray-300 text-black"
               />
             </div>
-            <div className="w-full">
-              <label className="font-semibold block mb-1">Teléfono:</label>
+            <div>
+              <label>Teléfono:</label>
               <input
                 type="text"
                 name="telefono"
@@ -195,8 +195,8 @@ export default function Conductor() {
                 className="w-full p-2 rounded border border-gray-300 text-black"
               />
             </div>
-            <div className="w-full">
-              <label className="font-semibold block mb-1">Licencia:</label>
+            <div>
+              <label>Licencia:</label>
               <input
                 type="text"
                 name="licencia"
@@ -206,8 +206,8 @@ export default function Conductor() {
                 className="w-full p-2 rounded border border-gray-300 text-black"
               />
             </div>
-            <div className="w-full">
-              <label className="font-semibold block mb-1">Fecha contratación:</label>
+            <div>
+              <label>Fecha contratación:</label>
               <input
                 type="date"
                 name="fecha_contratacion"

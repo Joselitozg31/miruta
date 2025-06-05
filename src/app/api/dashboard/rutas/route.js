@@ -1,13 +1,9 @@
 import { NextResponse } from 'next/server';
 import mysql from 'mysql2/promise';
+import { getMysqlConfig } from '../../_db';
 
 export async function GET() {
-  const connection = await mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'miruta',
-  });
+  const connection = await mysql.createConnection(getMysqlConfig());
 
   const [rows] = await connection.execute(
     `SELECT idrutas, nombre, descripcion, origen, destino, horaInicio, horaFin FROM rutas`
@@ -26,12 +22,7 @@ export async function POST(request) {
       return NextResponse.json({ message: 'Faltan campos obligatorios' }, { status: 400 });
     }
 
-    const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'miruta',
-    });
+    const connection = await mysql.createConnection(getMysqlConfig());
 
     // Asegúrate de que los campos coincidan con los de la tabla y que no haya errores de tipos
     await connection.execute(
@@ -57,12 +48,7 @@ export async function PUT(request) {
       return NextResponse.json({ message: 'Faltan campos obligatorios' }, { status: 400 });
     }
 
-    const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'miruta',
-    });
+    const connection = await mysql.createConnection(getMysqlConfig());
 
     await connection.execute(
       `UPDATE rutas SET nombre=?, descripcion=?, origen=?, destino=?, horaInicio=?, horaFin=? WHERE idrutas=?`,
@@ -93,12 +79,7 @@ export async function DELETE(request) {
       return NextResponse.json({ message: 'Falta el id de la ruta o el id no es válido' }, { status: 400 });
     }
 
-    const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'miruta',
-    });
+    const connection = await mysql.createConnection(getMysqlConfig());
 
     // Comprueba si la ruta existe antes de intentar borrar
     const [rows] = await connection.execute(

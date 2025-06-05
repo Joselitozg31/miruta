@@ -1,17 +1,13 @@
 import { NextResponse } from 'next/server';
 import mysql from 'mysql2/promise';
+import { getMysqlConfig } from '../../_db';
 
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
     const rutaId = searchParams.get('rutaId');
 
-    const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'miruta',
-    });
+    const connection = await mysql.createConnection(getMysqlConfig());
 
     let rows;
     if (rutaId) {
@@ -51,12 +47,7 @@ export async function POST(request) {
       return NextResponse.json({ message: 'Faltan campos obligatorios' }, { status: 400 });
     }
 
-    const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'miruta',
-    });
+    const connection = await mysql.createConnection(getMysqlConfig());
 
     await connection.execute(
       `INSERT INTO ubicacion (autobusId, latitud, longitud, timeStamp) VALUES (?, ?, ?, ?)`,
@@ -80,12 +71,7 @@ export async function PUT(request) {
     // Busca un autobusId asignado a esa ruta
     let autobusId = 1;
     if (rutaId) {
-      const connection = await mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        password: '',
-        database: 'miruta',
-      });
+      const connection = await mysql.createConnection(getMysqlConfig());
       const [rows] = await connection.execute(
         `SELECT autobusId FROM autobusRuta WHERE rutaId = ? LIMIT 1`,
         [rutaId]
@@ -100,12 +86,7 @@ export async function PUT(request) {
     const longitud = -3.7038 + Math.random() * 0.01;
     const timeStamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
-    const connection2 = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'miruta',
-    });
+    const connection2 = await mysql.createConnection(getMysqlConfig());
 
     await connection2.execute(
       `INSERT INTO ubicacion (autobusId, latitud, longitud, timeStamp) VALUES (?, ?, ?, ?)`,

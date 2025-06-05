@@ -21,21 +21,6 @@
       "static/chunks/main-app.js",
       "static/chunks/app/auth/login/page.js"
     ],
-    "/auth/recover/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/auth/recover/page.js"
-    ],
-    "/api/auth/recover/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/auth/recover/route.js"
-    ],
-    "/api/auth/login/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/auth/login/route.js"
-    ],
     "/dashboard/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -62,25 +47,15 @@
       "static/chunks/main-app.js",
       "static/chunks/app/api/dashboard/favorite-routes/route.js"
     ],
-    "/dashboard/usuariosdatos/page": [
+    "/dashboard/usuario/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/dashboard/usuariosdatos/page.js"
+      "static/chunks/app/dashboard/usuario/page.js"
     ],
-    "/api/dashboard/usuariosdatos/route": [
+    "/api/dashboard/usuario/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/api/dashboard/usuariosdatos/route.js"
-    ],
-    "/dashboard/conductor/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/dashboard/conductor/page.js"
-    ],
-    "/api/dashboard/conductor/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/dashboard/conductor/route.js"
+      "static/chunks/app/api/dashboard/usuario/route.js"
     ],
     "/dashboard/rutas/page": [
       "static/chunks/webpack.js",
@@ -90,6 +65,7 @@
     "/dashboard/paradas/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
+      "static/css/app/dashboard/paradas/page.css",
       "static/chunks/app/dashboard/paradas/page.js"
     ],
     "/dashboard/autobus/page": [
@@ -102,25 +78,25 @@
       "static/chunks/main-app.js",
       "static/chunks/app/api/dashboard/autobus/route.js"
     ],
-    "/dashboard/usuario/page": [
+    "/dashboard/conductor/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/dashboard/usuario/page.js"
+      "static/chunks/app/dashboard/conductor/page.js"
     ],
-    "/api/dashboard/usuario/route": [
+    "/api/dashboard/conductor/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/api/dashboard/usuario/route.js"
+      "static/chunks/app/api/dashboard/conductor/route.js"
     ],
-    "/dashboard/ubicacion/page": [
+    "/dashboard/usuariosdatos/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/dashboard/ubicacion/page.js"
+      "static/chunks/app/dashboard/usuariosdatos/page.js"
     ],
-    "/auth/register/page": [
+    "/api/dashboard/usuariosdatos/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/auth/register/page.js"
+      "static/chunks/app/api/dashboard/usuariosdatos/route.js"
     ]
   }
 }

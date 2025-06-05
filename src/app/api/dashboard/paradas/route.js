@@ -1,13 +1,9 @@
 import { NextResponse } from 'next/server';
 import mysql from 'mysql2/promise';
+import { getMysqlConfig } from '../../_db';
 
 export async function GET() {
-  const connection = await mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'miruta',
-  });
+  const connection = await mysql.createConnection(getMysqlConfig());
 
   const [rows] = await connection.execute(
     `SELECT idparadas, rutaId, nombre, latitud, longitud, orden FROM paradas`
@@ -26,12 +22,7 @@ export async function POST(request) {
       return NextResponse.json({ message: 'Faltan campos obligatorios' }, { status: 400 });
     }
 
-    const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'miruta',
-    });
+    const connection = await mysql.createConnection(getMysqlConfig());
 
     await connection.execute(
       `INSERT INTO paradas (rutaId, nombre, latitud, longitud, orden) VALUES (?, ?, ?, ?, ?)`,
@@ -55,12 +46,7 @@ export async function PUT(request) {
       return NextResponse.json({ message: 'Faltan campos obligatorios' }, { status: 400 });
     }
 
-    const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'miruta',
-    });
+    const connection = await mysql.createConnection(getMysqlConfig());
 
     await connection.execute(
       `UPDATE paradas SET rutaId=?, nombre=?, latitud=?, longitud=?, orden=? WHERE idparadas=?`,
@@ -90,12 +76,7 @@ export async function DELETE(request) {
       return NextResponse.json({ message: 'Falta el id de la parada o el id no es válido' }, { status: 400 });
     }
 
-    const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'miruta',
-    });
+    const connection = await mysql.createConnection(getMysqlConfig());
 
     const [result] = await connection.execute(
       `DELETE FROM paradas WHERE idparadas=?`,

@@ -151,85 +151,78 @@ export default function UsuariosDatos() {
     <div className="blue-box flex flex-col items-center justify-center box-main">
       <h2 className="section-title">Usuarios</h2>
       {showForm && (
-        <form onSubmit={handleSubmit} className="w-full mb-6 flex flex-col gap-4 items-center">
-          <div className="w-full">
-            <label className="font-semibold block mb-1">Nombre:</label>
+        <form onSubmit={handleSubmit} className="form-vertical mb-6">
+          <div>
+            <label>Nombre:</label>
             <input
               type="text"
               name="nombre"
               value={form.nombre}
               onChange={handleChange}
               required
-              className="w-full p-2 rounded border border-gray-300 text-black"
             />
           </div>
-          <div className="w-full">
-            <label className="font-semibold block mb-1">Primer apellido:</label>
+          <div>
+            <label>Primer apellido:</label>
             <input
               type="text"
               name="apellido1"
               value={form.apellido1}
               onChange={handleChange}
               required
-              className="w-full p-2 rounded border border-gray-300 text-black"
             />
           </div>
-          <div className="w-full">
-            <label className="font-semibold block mb-1">Segundo apellido:</label>
+          <div>
+            <label>Segundo apellido:</label>
             <input
               type="text"
               name="apellido2"
               value={form.apellido2}
               onChange={handleChange}
-              className="w-full p-2 rounded border border-gray-300 text-black"
             />
           </div>
-          <div className="w-full">
-            <label className="font-semibold block mb-1">Nombre de usuario:</label>
+          <div>
+            <label>Nombre de usuario:</label>
             <input
               type="text"
               name="nombreusuario"
               value={form.nombreusuario}
               onChange={handleChange}
-              className="w-full p-2 rounded border border-gray-300 text-black"
             />
           </div>
-          <div className="w-full">
-            <label className="font-semibold block mb-1">Email:</label>
+          <div>
+            <label>Email:</label>
             <input
               type="email"
               name="email"
               value={form.email}
               onChange={handleChange}
               required
-              className="w-full p-2 rounded border border-gray-300 text-black"
             />
           </div>
-          <div className="w-full">
-            <label className="font-semibold block mb-1">Tipo:</label>
+          <div>
+            <label>Tipo:</label>
             <select
               name="tipo"
               value={form.tipo}
               onChange={handleChange}
-              className="w-full p-2 rounded border border-gray-300 text-black"
             >
               <option value="usuario">Usuario</option>
               <option value="admin">Admin</option>
             </select>
           </div>
-          <div className="w-full">
-            <label className="font-semibold block mb-1">Verificado:</label>
+          <div>
+            <label>Verificado:</label>
             <select
               name="verificado"
               value={form.verificado}
               onChange={handleChange}
-              className="w-full p-2 rounded border border-gray-300 text-black"
             >
               <option value={0}>No</option>
               <option value={1}>Sí</option>
             </select>
           </div>
-          <button type="submit" className="bg-blue-700 text-white px-4 py-2 rounded-lg">
+          <button type="submit">
             Guardar
           </button>
         </form>

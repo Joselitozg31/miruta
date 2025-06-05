@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import mysql from 'mysql2/promise';
 import crypto from 'crypto';
+import { getMysqlConfig } from '../../_db';
 
 export async function POST(request) {
   const { email, password } = await request.json();
@@ -11,12 +12,7 @@ export async function POST(request) {
 
   let connection;
   try {
-    connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'miruta',
-    });
+    connection = await mysql.createConnection(getMysqlConfig());
 
     // Busca el usuario por email
     const [rows] = await connection.execute(

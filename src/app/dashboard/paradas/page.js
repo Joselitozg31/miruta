@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import Layout from '../../../components/Layout';
+import '../../globals.css';
 
 export default function Paradas() {
   const [paradas, setParadas] = useState([]);
   const [rutas, setRutas] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({
-    rutaId: '',
+    rutaNombre: '',
     nombre: '',
     latitud: '',
     longitud: '',
@@ -21,7 +22,7 @@ export default function Paradas() {
   // Edición
   const [editId, setEditId] = useState(null);
   const [editForm, setEditForm] = useState({
-    rutaId: '',
+    rutaNombre: '',
     nombre: '',
     latitud: '',
     longitud: '',
@@ -29,20 +30,18 @@ export default function Paradas() {
   });
 
   useEffect(() => {
-    // Obtener paradas y rutas
-    fetch('/api/dashboard/paradas')
-      .then(res => res.json())
-      .then(data => {
-        const sorted = [...data].sort((a, b) => {
-          if (a.rutaId !== b.rutaId) return a.rutaId - b.rutaId;
-          return a.orden - b.orden;
-        });
-        setParadas(sorted);
+    // Carga rutas y paradas en paralelo
+    Promise.all([
+      fetch('/api/dashboard/paradas').then(res => res.json()),
+      fetch('/api/dashboard/rutas').then(res => res.json())
+    ]).then(([paradasData, rutasData]) => {
+      const sorted = [...paradasData].sort((a, b) => {
+        if (a.rutaId !== b.rutaId) return a.rutaId - b.rutaId;
+        return a.orden - b.orden;
       });
-
-    fetch('/api/dashboard/rutas')
-      .then(res => res.json())
-      .then(data => setRutas(data));
+      setParadas(sorted);
+      setRutas(rutasData);
+    });
 
     if (typeof window !== 'undefined') {
       const userStr = localStorage.getItem('user');
@@ -70,15 +69,28 @@ export default function Paradas() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('');
+    // Buscar el idrutas correspondiente al nombre seleccionado
+    const ruta = rutas.find(r => r.nombre === form.rutaNombre);
+    if (!ruta) {
+      setMessage('Ruta no encontrada');
+      return;
+    }
+    const sendForm = {
+      rutaId: ruta.idrutas,
+      nombre: form.nombre,
+      latitud: form.latitud,
+      longitud: form.longitud,
+      orden: form.orden
+    };
     const res = await fetch('/api/dashboard/paradas', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form)
+      body: JSON.stringify(sendForm)
     });
     const data = await res.json();
     setMessage(data.message);
     setForm({
-      rutaId: '',
+      rutaNombre: '',
       nombre: '',
       latitud: '',
       longitud: '',
@@ -106,9 +118,11 @@ export default function Paradas() {
 
   // Edición
   const handleEditClick = (parada) => {
+    // Busca el nombre de la ruta por el id
+    const ruta = rutas.find(r => r.idrutas === parada.rutaId);
     setEditId(parada.idparadas);
     setEditForm({
-      rutaId: parada.rutaId,
+      rutaNombre: ruta ? ruta.nombre : '',
       nombre: parada.nombre,
       latitud: parada.latitud,
       longitud: parada.longitud,
@@ -126,10 +140,24 @@ export default function Paradas() {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     setMessage('');
+    // Buscar el idrutas correspondiente al nombre seleccionado
+    const ruta = rutas.find(r => r.nombre === editForm.rutaNombre);
+    if (!ruta) {
+      setMessage('Ruta no encontrada');
+      return;
+    }
+    const sendForm = {
+      idparadas: editId,
+      rutaId: ruta.idrutas,
+      nombre: editForm.nombre,
+      latitud: editForm.latitud,
+      longitud: editForm.longitud,
+      orden: editForm.orden
+    };
     const res = await fetch('/api/dashboard/paradas', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idparadas: editId, ...editForm })
+      body: JSON.stringify(sendForm)
     });
     const data = await res.json();
     setMessage(data.message);
@@ -183,31 +211,33 @@ export default function Paradas() {
       <div className="blue-box flex flex-col items-center justify-center box-main">
         <h2 className="section-title">Paradas</h2>
         {showForm && (
-          <form onSubmit={handleSubmit} className="w-full mb-6 flex flex-col gap-4 items-center">
-            <div className="w-full">
-              <label className="font-semibold block mb-1">Ruta ID:</label>
-              <input
-                type="number"
-                name="rutaId"
-                value={form.rutaId}
+          <form onSubmit={handleSubmit} className="form-vertical mb-6">
+            <div>
+              <label>Ruta:</label>
+              <select
+                name="rutaNombre"
+                value={form.rutaNombre}
                 onChange={handleChange}
                 required
-                className="w-full p-2 rounded border border-gray-300 text-black"
-              />
+              >
+                <option value="">Selecciona una ruta</option>
+                {rutas.map(ruta => (
+                  <option key={ruta.idrutas} value={ruta.nombre}>{ruta.nombre}</option>
+                ))}
+              </select>
             </div>
-            <div className="w-full">
-              <label className="font-semibold block mb-1">Nombre:</label>
+            <div>
+              <label>Nombre:</label>
               <input
                 type="text"
                 name="nombre"
                 value={form.nombre}
                 onChange={handleChange}
                 required
-                className="w-full p-2 rounded border border-gray-300 text-black"
               />
             </div>
-            <div className="w-full">
-              <label className="font-semibold block mb-1">Latitud:</label>
+            <div>
+              <label>Latitud:</label>
               <input
                 type="number"
                 step="any"
@@ -215,11 +245,10 @@ export default function Paradas() {
                 value={form.latitud}
                 onChange={handleChange}
                 required
-                className="w-full p-2 rounded border border-gray-300 text-black"
               />
             </div>
-            <div className="w-full">
-              <label className="font-semibold block mb-1">Longitud:</label>
+            <div>
+              <label>Longitud:</label>
               <input
                 type="number"
                 step="any"
@@ -227,21 +256,19 @@ export default function Paradas() {
                 value={form.longitud}
                 onChange={handleChange}
                 required
-                className="w-full p-2 rounded border border-gray-300 text-black"
               />
             </div>
-            <div className="w-full">
-              <label className="font-semibold block mb-1">Orden:</label>
+            <div>
+              <label>Orden:</label>
               <input
                 type="number"
                 name="orden"
                 value={form.orden}
                 onChange={handleChange}
                 required
-                className="w-full p-2 rounded border border-gray-300 text-black"
               />
             </div>
-            <button type="submit" className="bg-blue-700 text-white px-4 py-2 rounded-lg">
+            <button type="submit">
               Guardar
             </button>
           </form>
@@ -281,14 +308,18 @@ export default function Paradas() {
                       {editId === parada.idparadas ? (
                         isAdmin && (
                           <form onSubmit={handleEditSubmit} className="flex-1 flex flex-col gap-2">
-                            <input
-                              type="number"
-                              name="rutaId"
-                              value={editForm.rutaId}
+                            <select
+                              name="rutaNombre"
+                              value={editForm.rutaNombre}
                               onChange={handleEditChange}
                               required
                               className="p-1 rounded border border-gray-300 text-black"
-                            />
+                            >
+                              <option value="">Selecciona una ruta</option>
+                              {rutas.map(ruta => (
+                                <option key={ruta.idrutas} value={ruta.nombre}>{ruta.nombre}</option>
+                              ))}
+                            </select>
                             <input
                               type="text"
                               name="nombre"
