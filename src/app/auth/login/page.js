@@ -106,7 +106,8 @@ export default function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full p-2 rounded border border-gray-300"
+                className="w-full p-2 rounded-full border border-gray-300" 
+                style={{ borderRadius: '7.5px' }} 
               />
               <input
                 type="password"
@@ -114,7 +115,8 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full p-2 rounded border border-gray-300"
+                className="w-full p-2 rounded-full border border-gray-300" 
+                style={{ borderRadius: '7.5px' }}
               />
             </div>
             <div className="button-group mt-6 flex flex-col gap-2">
@@ -173,7 +175,7 @@ export default function Login() {
             }}
             onClick={() => router.push('/auth/recover')}
           >
-            Recuperar contraseña
+            ¿Olvidaste tu contraseña?
           </button>
         </p>
       </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react'; // <-- Añade React y useRef
 import { useRouter } from 'next/navigation';
 
 export default function Usuario() {
@@ -10,6 +10,9 @@ export default function Usuario() {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [userImage, setUserImage] = useState(''); // base64 o url
+  const [previewImage, setPreviewImage] = useState('');
+  const imageInputRef = useRef(null); // <-- Usa useRef en vez de createRef
   const router = useRouter();
 
   useEffect(() => {
@@ -39,12 +42,31 @@ export default function Usuario() {
         }
         const data = await response.json();
         setUser(data);
+        setUserImage(data.imagen || '');
+        setPreviewImage(data.imagen || '');
       } catch (err) {
         setError(err.message);
       }
     };
     fetchUser();
   }, []);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      setPreviewImage(ev.target.result);
+      setUserImage(ev.target.result); // base64
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleImageClick = () => {
+    if (imageInputRef.current) {
+      imageInputRef.current.click();
+    }
+  };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -58,10 +80,8 @@ export default function Usuario() {
 
     setLoading(true);
 
-    // Encripta la contraseña en el frontend (opcional, pero mejor hacerlo en backend)
     let encryptedPassword = '';
     if (newPassword) {
-      // Usa SHA-256 para ejemplo, pero lo ideal es bcrypt en backend
       const encoder = new TextEncoder();
       const data = encoder.encode(newPassword);
       const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
@@ -69,14 +89,19 @@ export default function Usuario() {
     }
 
     try {
+      // Construye el body solo con los campos necesarios
+      const updateBody = {
+        ...user,
+        imagen: userImage || undefined,
+      };
+      if (newPassword) {
+        updateBody.password = encryptedPassword;
+      }
       const res = await fetch('/api/dashboard/usuario', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({
-          ...user,
-          password: encryptedPassword || undefined,
-        }),
+        body: JSON.stringify(updateBody),
       });
       const result = await res.json();
       if (!res.ok) throw new Error(result.message || 'Error al actualizar');
@@ -103,6 +128,37 @@ export default function Usuario() {
       {!user && !error && <p>Cargando datos...</p>}
       {user && (
         <form className="text-left" onSubmit={handleUpdate}>
+          {/* Imagen de usuario arriba del nombre */}
+          <div className="user-data-row mt-4" style={{ justifyContent: 'center', display: 'flex' }}>
+            <div>
+              <img
+                src={
+                  previewImage && previewImage.trim() !== ''
+                    ? previewImage
+                    : '/logo-miruta.png' // Usa el logo si no hay imagen de perfil
+                }
+                alt="Imagen de usuario"
+                style={{
+                  width: 100,
+                  height: 100,
+                  objectFit: 'cover',
+                  borderRadius: '50%',
+                  marginBottom: '0.5rem',
+                  cursor: 'pointer',
+                  border: '2px solid #0074d9'
+                }}
+                onClick={handleImageClick}
+                title="Haz clic para cambiar la imagen"
+              />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                ref={imageInputRef}
+                style={{ display: 'none' }}
+              />
+            </div>
+          </div>
           <div className="user-data-row">
             <span className="font-semibold">Nombre:</span> {user.nombre}
           </div>

@@ -23,7 +23,7 @@ function generateCode() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-// POST: Solicitar código de recuperación
+// POST: Solicitar código de recuperación (guarda el código en la columna token_recover)
 export async function POST(request) {
   const { email } = await request.json();
   if (!email) {
@@ -44,16 +44,19 @@ export async function POST(request) {
       [email]
     );
     if (rows.length === 0) {
+      await connection.end();
       return NextResponse.json({ message: 'No existe usuario con ese email' }, { status: 404 });
     }
 
-    // Genera código y guárdalo temporalmente en la tabla codigo_recuperacion
+    // Genera código y guárdalo en la columna token_recover
     const code = generateCode();
 
     await connection.execute(
-      'REPLACE INTO codigo_recuperacion (email, code, created_at) VALUES (?, ?, NOW())',
-      [email, code]
+      'UPDATE usuarios SET token_recover = ? WHERE email = ?',
+      [code, email]
     );
+
+    await connection.end();
 
     // Envía el código por Mailjet
     await mailjetClient
@@ -79,13 +82,12 @@ export async function POST(request) {
 
     return NextResponse.json({ message: 'Código enviado al correo' });
   } catch (err) {
-    return NextResponse.json({ message: 'Error enviando código', error: err.message }, { status: 500 });
-  } finally {
     if (connection) await connection.end();
+    return NextResponse.json({ message: 'Error enviando código', error: err.message }, { status: 500 });
   }
 }
 
-// PUT: Cambiar contraseña usando código
+// PUT: Cambiar contraseña usando código (verifica en la columna token_recover)
 export async function PUT(request) {
   const { email, code, newPassword } = await request.json();
   if (!email || !code || !newPassword) {
@@ -109,54 +111,41 @@ export async function PUT(request) {
   try {
     connection = await mysql.createConnection(getMysqlConfig());
 
-    // Verifica código en la tabla codigo_recuperacion
+    // Verifica código en la columna token_recover
     const [rows] = await connection.execute(
-      'SELECT code, created_at FROM codigo_recuperacion WHERE email = ?',
+      'SELECT token_recover FROM usuarios WHERE email = ?',
       [email]
     );
-    if (rows.length === 0 || rows[0].code !== code) {
+    if (rows.length === 0 || rows[0].token_recover !== code) {
+      await connection.end();
       return NextResponse.json({ message: 'Código incorrecto' }, { status: 400 });
-    }
-
-    // Opcional: verifica expiración (ej: 15 min)
-    const createdAt = new Date(rows[0].created_at);
-    if (Date.now() - createdAt.getTime() > 15 * 60 * 1000) {
-      return NextResponse.json({ message: 'Código expirado' }, { status: 400 });
     }
 
     // Cambia la contraseña (encripta con SHA-256)
     let hash;
     try {
-      // Siempre usa import dinámico para Next.js API routes (evita require)
       const crypto = (await import('crypto')).default;
       hash = crypto.createHash('sha256').update(newPassword).digest('hex');
     } catch (e) {
+      await connection.end();
       return NextResponse.json({ message: 'Error en el hash de contraseña', error: e.message }, { status: 500 });
     }
 
-    // DEBUG: Verifica el hash y el email
-    // console.log('DEBUG HASH:', hash, 'EMAIL:', email);
-
-    // Actualiza la contraseña solo si el usuario existe y el email es correcto
+    // Actualiza la contraseña y limpia el token_recover
     const [updateResult] = await connection.execute(
-      'UPDATE usuarios SET password=? WHERE email=?',
+      'UPDATE usuarios SET password=?, token_recover=NULL WHERE email=?',
       [hash, email]
     );
+
+    await connection.end();
 
     if (updateResult.affectedRows === 0) {
       return NextResponse.json({ message: 'No se pudo actualizar la contraseña. Usuario no encontrado.' }, { status: 404 });
     }
 
-    // Borra el código usado
-    await connection.execute(
-      'DELETE FROM codigo_recuperacion WHERE email=?',
-      [email]
-    );
-
     return NextResponse.json({ message: 'Contraseña cambiada correctamente' });
   } catch (err) {
-    return NextResponse.json({ message: 'Error cambiando contraseña', error: err.message }, { status: 500 });
-  } finally {
     if (connection) await connection.end();
+    return NextResponse.json({ message: 'Error cambiando contraseña', error: err.message }, { status: 500 });
   }
 }

@@ -15,7 +15,7 @@ export async function GET(request) {
     const connection = await mysql.createConnection(getMysqlConfig());
 
     const [rows] = await connection.execute(
-      `SELECT idusuarios, nombre, apellido1, apellido2, nombreusuario, email FROM usuarios WHERE idusuarios = ?`,
+      `SELECT idusuarios, nombre, apellido1, apellido2, nombreusuario, email, imagen FROM usuarios WHERE idusuarios = ?`,
       [idusuarios]
     );
     await connection.end();
@@ -33,25 +33,57 @@ export async function GET(request) {
 export async function PUT(request) {
   try {
     const body = await request.json();
-    const { idusuarios, nombre, apellido1, apellido2, nombreusuario, email, password } = body;
+    const { idusuarios, nombre, apellido1, apellido2, nombreusuario, email, password, imagen } = body;
 
-    if (!idusuarios || !nombre || !apellido1 || !nombreusuario || !email) {
-      return NextResponse.json({ message: 'Faltan campos obligatorios' }, { status: 400 });
+    if (!idusuarios) {
+      return NextResponse.json({ message: 'Falta el id del usuario' }, { status: 400 });
     }
 
     const connection = await mysql.createConnection(getMysqlConfig());
 
-    if (password) {
-      await connection.execute(
-        `UPDATE usuarios SET nombre=?, apellido1=?, apellido2=?, nombreusuario=?, email=?, password=? WHERE idusuarios=?`,
-        [nombre, apellido1, apellido2, nombreusuario, email, password, idusuarios]
-      );
-    } else {
-      await connection.execute(
-        `UPDATE usuarios SET nombre=?, apellido1=?, apellido2=?, nombreusuario=?, email=? WHERE idusuarios=?`,
-        [nombre, apellido1, apellido2, nombreusuario, email, idusuarios]
-      );
+    // Construye la consulta dinámicamente según los campos enviados
+    const fields = [];
+    const values = [];
+
+    if (nombre !== undefined) {
+      fields.push('nombre = ?');
+      values.push(nombre);
     }
+    if (apellido1 !== undefined) {
+      fields.push('apellido1 = ?');
+      values.push(apellido1);
+    }
+    if (apellido2 !== undefined) {
+      fields.push('apellido2 = ?');
+      values.push(apellido2);
+    }
+    if (nombreusuario !== undefined) {
+      fields.push('nombreusuario = ?');
+      values.push(nombreusuario);
+    }
+    if (email !== undefined) {
+      fields.push('email = ?');
+      values.push(email);
+    }
+    if (imagen !== undefined) {
+      fields.push('imagen = ?');
+      values.push(imagen);
+    }
+    if (password && password.trim() !== '') {
+      fields.push('password = ?');
+      values.push(password);
+    }
+
+    if (fields.length === 0) {
+      await connection.end();
+      return NextResponse.json({ message: 'No hay datos para actualizar' }, { status: 400 });
+    }
+
+    values.push(idusuarios);
+
+    const sql = `UPDATE usuarios SET ${fields.join(', ')} WHERE idusuarios = ?`;
+    await connection.execute(sql, values);
+
     await connection.end();
 
     return NextResponse.json({ message: 'Usuario actualizado correctamente' });

@@ -47,20 +47,12 @@ export default function Register() {
       return;
     }
 
-    // Comprueba que window.crypto.subtle existe antes de usarlo
-    let encryptedPassword = formData.password;
-    if (typeof window !== 'undefined' && window.crypto && window.crypto.subtle) {
-      const encoder = new TextEncoder();
-      const data = encoder.encode(formData.password);
-      const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
-      encryptedPassword = Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-
+    // Elimina la encriptación en el frontend: envía la contraseña en texto plano
     try {
       const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, password: encryptedPassword }),
+        body: JSON.stringify({ ...formData, password: formData.password }),
       });
 
       if (!response.ok) {

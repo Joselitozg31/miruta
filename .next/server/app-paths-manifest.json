@@ -1,10 +1,14 @@
 {
-  "/api/dashboard/usuariosdatos/route": "app/api/dashboard/usuariosdatos/route.js",
+  "/api/dashboard/usuario/route": "app/api/dashboard/usuario/route.js",
+  "/api/dashboard/paradas/route": "app/api/dashboard/paradas/route.js",
   "/api/dashboard/rutas/route": "app/api/dashboard/rutas/route.js",
   "/api/dashboard/favorite-routes/route": "app/api/dashboard/favorite-routes/route.js",
-  "/dashboard/rutas/page": "app/dashboard/rutas/page.js",
-  "/dashboard/paradas/page": "app/dashboard/paradas/page.js",
-  "/dashboard/conductor/page": "app/dashboard/conductor/page.js",
-  "/dashboard/autobus/page": "app/dashboard/autobus/page.js",
-  "/dashboard/usuariosdatos/page": "app/dashboard/usuariosdatos/page.js"
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/auth/google/route": "app/api/auth/google/route.js",
+  "/api/auth/google/callback/route": "app/api/auth/google/callback/route.js",
+  "/auth/login/page": "app/auth/login/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/dashboard/usuario/page": "app/dashboard/usuario/page.js",
+  "/auth/register/page": "app/auth/register/page.js",
+  "/dashboard/rutas/page": "app/dashboard/rutas/page.js"
 }

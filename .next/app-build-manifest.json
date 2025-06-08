@@ -21,6 +21,11 @@
       "static/chunks/main-app.js",
       "static/chunks/app/auth/login/page.js"
     ],
+    "/api/auth/login/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/auth/login/route.js"
+    ],
     "/dashboard/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -57,46 +62,30 @@
       "static/chunks/main-app.js",
       "static/chunks/app/api/dashboard/usuario/route.js"
     ],
+    "/auth/register/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/auth/register/page.js"
+    ],
+    "/api/auth/google/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/auth/google/route.js"
+    ],
+    "/api/auth/google/callback/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/auth/google/callback/route.js"
+    ],
     "/dashboard/rutas/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/dashboard/rutas/page.js"
     ],
-    "/dashboard/paradas/page": [
+    "/_not-found/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/dashboard/paradas/page.css",
-      "static/chunks/app/dashboard/paradas/page.js"
-    ],
-    "/dashboard/autobus/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/dashboard/autobus/page.js"
-    ],
-    "/api/dashboard/autobus/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/dashboard/autobus/route.js"
-    ],
-    "/dashboard/conductor/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/dashboard/conductor/page.js"
-    ],
-    "/api/dashboard/conductor/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/dashboard/conductor/route.js"
-    ],
-    "/dashboard/usuariosdatos/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/dashboard/usuariosdatos/page.js"
-    ],
-    "/api/dashboard/usuariosdatos/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/dashboard/usuariosdatos/route.js"
+      "static/chunks/app/_not-found/page.js"
     ]
   }
 }
