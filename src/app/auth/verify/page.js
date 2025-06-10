@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Layout from '../../../components/Layout';
 
-export default function Verify() {
+function VerifyContent() {
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
   const [message, setMessage] = useState('');
@@ -69,5 +69,13 @@ export default function Verify() {
         </form>
       </div>
     </Layout>
+  );
+}
+
+export default function Verify() {
+  return (
+    <Suspense fallback={<div>Cargando...</div>}>
+      <VerifyContent />
+    </Suspense>
   );
 }
