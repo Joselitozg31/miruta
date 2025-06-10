@@ -2,11 +2,13 @@ import { NextResponse } from 'next/server';
 import mysql from 'mysql2/promise';
 import { getMysqlConfig } from '../../../_db';
 
+const PUBLIC_URL = process.env.PUBLIC_URL || 'https://miruta-dyg0cjg5cvajafak.spaincentral-01.azurewebsites.net';
+
 export async function GET(request) {
-  const { searchParams, origin } = new URL(request.url);
+  const { searchParams } = new URL(request.url);
   const code = searchParams.get('code');
   if (!code) {
-    return NextResponse.redirect(origin + '/auth/login?error=NoCode');
+    return NextResponse.redirect(PUBLIC_URL + '/auth/login?error=NoCode');
   }
 
   // Intercambia el code por tokens
@@ -23,7 +25,7 @@ export async function GET(request) {
   });
   const tokenData = await tokenRes.json();
   if (!tokenData.id_token) {
-    return NextResponse.redirect(origin + '/auth/login?error=NoToken');
+    return NextResponse.redirect(PUBLIC_URL + '/auth/login?error=NoToken');
   }
 
   // Obtiene datos del usuario
@@ -65,9 +67,9 @@ export async function GET(request) {
       email: user.email,
       tipo: user.tipo
     });
-    return NextResponse.redirect(origin + '/auth/login?' + params.toString());
+    return NextResponse.redirect(PUBLIC_URL + '/auth/login?' + params.toString());
   } catch (err) {
-    return NextResponse.redirect(origin + '/auth/login?error=DB');
+    return NextResponse.redirect(PUBLIC_URL + '/auth/login?error=DB');
   } finally {
     if (connection) await connection.end();
   }
