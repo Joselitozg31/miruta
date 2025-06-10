@@ -7,7 +7,7 @@
     "tailwind:init": "npx tailwindcss init",
     "tailwind:build": "npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
     "dev": "next dev",
-    "start": "node server.js",
+    "start": "next start",
     "build": "next build"
   },
   "keywords": [],
