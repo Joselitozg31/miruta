@@ -3,12 +3,7 @@ import mysql from 'mysql2/promise';
 import { getMysqlConfig } from '../../_db';
 
 export async function GET() {
-  const connection = await mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'miruta',
-  });
+  const connection = await mysql.createConnection(getMysqlConfig());
 
   const [rows] = await connection.execute(
     `SELECT idusuarios, nombre, apellido1, apellido2, nombreusuario, email, tipo, verificado FROM usuarios`
@@ -27,12 +22,7 @@ export async function POST(request) {
       return NextResponse.json({ message: 'Faltan campos obligatorios' }, { status: 400 });
     }
 
-    const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'miruta',
-    });
+    const connection = await mysql.createConnection(getMysqlConfig());
 
     await connection.execute(
       `INSERT INTO usuarios (nombre, apellido1, apellido2, nombreusuario, email, tipo, verificado, password) VALUES (?, ?, ?, ?, ?, ?, ?, '')`,
@@ -55,12 +45,7 @@ export async function PUT(request) {
       return NextResponse.json({ message: 'Faltan campos obligatorios' }, { status: 400 });
     }
 
-    const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'miruta',
-    });
+    const connection = await mysql.createConnection(getMysqlConfig());
 
     await connection.execute(
       `UPDATE usuarios SET nombre=?, apellido1=?, apellido2=?, nombreusuario=?, email=?, tipo=?, verificado=? WHERE idusuarios=?`,
@@ -89,12 +74,7 @@ export async function DELETE(request) {
       return NextResponse.json({ message: 'Falta el id del usuario o el id no es válido' }, { status: 400 });
     }
 
-    const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'miruta',
-    });
+    const connection = await mysql.createConnection(getMysqlConfig());
 
     const [result] = await connection.execute(
       `DELETE FROM usuarios WHERE idusuarios=?`,

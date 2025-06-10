@@ -3,12 +3,7 @@ import mysql from 'mysql2/promise';
 import { getMysqlConfig } from '../../_db';
 
 export async function GET() {
-  const connection = await mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'miruta',
-  });
+  const connection = await mysql.createConnection(getMysqlConfig());
 
   const [rows] = await connection.execute(
     `SELECT idconductores, nombre, apellido1, apellido2, dni, telefono, licencia, fecha_contratacion FROM conductores`
@@ -27,12 +22,7 @@ export async function POST(request) {
       return NextResponse.json({ message: 'Faltan campos obligatorios' }, { status: 400 });
     }
 
-    const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'miruta',
-    });
+    const connection = await mysql.createConnection(getMysqlConfig());
 
     await connection.execute(
       `INSERT INTO conductores (nombre, apellido1, apellido2, dni, telefono, licencia, fecha_contratacion) VALUES (?, ?, ?, ?, ?, ?, ?)`,
@@ -56,12 +46,7 @@ export async function PUT(request) {
       return NextResponse.json({ message: 'Faltan campos obligatorios' }, { status: 400 });
     }
 
-    const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'miruta',
-    });
+    const connection = await mysql.createConnection(getMysqlConfig());
 
     await connection.execute(
       `UPDATE conductores SET nombre=?, apellido1=?, apellido2=?, dni=?, telefono=?, licencia=?, fecha_contratacion=? WHERE idconductores=?`,
@@ -91,12 +76,7 @@ export async function DELETE(request) {
       return NextResponse.json({ message: 'Falta el id del conductor o el id no es válido' }, { status: 400 });
     }
 
-    const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'miruta',
-    });
+    const connection = await mysql.createConnection(getMysqlConfig());
 
     const [result] = await connection.execute(
       `DELETE FROM conductores WHERE idconductores=?`,
