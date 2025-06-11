@@ -47,10 +47,10 @@ export async function GET(request) {
     if (rows.length > 0) {
       user = rows[0];
     } else {
-      // Si no existe, crea usuario (añadiendo apellido1 vacío)
+      // Si no existe, crea usuario con datos de Google
       const [result] = await connection.execute(
-        'INSERT INTO usuarios (nombre, apellido1, email, google_id, verificado, tipo) VALUES (?, ?, ?, ?, 1, "usuario")',
-        [userInfo.name, '', userInfo.email, userInfo.sub]
+        'INSERT INTO usuarios (nombre, apellido1, email, google_id, password, verificado, tipo) VALUES (?, ?, ?, ?, ?, 1, "usuario")',
+        [userInfo.name, '', userInfo.email, userInfo.sub, '']
       );
       user = {
         idusuarios: result.insertId,
