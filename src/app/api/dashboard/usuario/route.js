@@ -85,11 +85,14 @@ export async function PUT(request) {
       if (!isPasswordValid(password)) {
         await connection.end();
         return NextResponse.json({
-          message: 'La contraseña debe tener al menos 8 caracteres, una mayúscula y un carácter especial.'
+          message: 'La contraseña debe tener al menos 8 caracteres, una mayúscula y un carácter especial (.,-¨*^¿?=)/·"$%%%´`+).'
         }, { status: 400 });
       }
+      // Encripta la contraseña antes de guardar
+      const crypto = (await import('crypto')).default;
+      const hash = crypto.createHash('sha256').update(password).digest('hex');
       fields.push('password = ?');
-      values.push(password);
+      values.push(hash);
     }
 
     if (fields.length === 0) {
