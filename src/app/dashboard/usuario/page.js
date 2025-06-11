@@ -1,7 +1,18 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react'; // <-- Añade React y useRef
+import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+
+// Misma validación que en el backend
+function validatePassword(password) {
+  const specialChars = /[.,\-¨\*\^¿\?=\/\·"\$%´`+]/;
+  const hasUppercase = /[A-Z]/;
+  return (
+    password.length >= 8 &&
+    hasUppercase.test(password) &&
+    specialChars.test(password)
+  );
+}
 
 export default function Usuario() {
   const [user, setUser] = useState(null);
@@ -10,15 +21,14 @@ export default function Usuario() {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [userImage, setUserImage] = useState(''); // base64 o url
+  const [userImage, setUserImage] = useState('');
   const [previewImage, setPreviewImage] = useState('');
-  const imageInputRef = useRef(null); // <-- Usa useRef en vez de createRef
+  const imageInputRef = useRef(null);
   const router = useRouter();
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        // Extrae el idusuarios del token simulado o google en localStorage
         const token = localStorage.getItem('token');
         let id = '';
         if (token && token.startsWith('token-simulado-')) {
@@ -57,7 +67,7 @@ export default function Usuario() {
     const reader = new FileReader();
     reader.onload = (ev) => {
       setPreviewImage(ev.target.result);
-      setUserImage(ev.target.result); // base64
+      setUserImage(ev.target.result);
     };
     reader.readAsDataURL(file);
   };
@@ -77,25 +87,20 @@ export default function Usuario() {
       setError('Las contraseñas no coinciden');
       return;
     }
+    if (newPassword && !validatePassword(newPassword)) {
+      setError('La contraseña debe tener al menos 8 caracteres, una mayúscula y un carácter especial (.,-¨*^¿?=)/·"$%%%´`+).');
+      return;
+    }
 
     setLoading(true);
 
-    let encryptedPassword = '';
-    if (newPassword) {
-      const encoder = new TextEncoder();
-      const data = encoder.encode(newPassword);
-      const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
-      encryptedPassword = Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-
     try {
-      // Construye el body solo con los campos necesarios
       const updateBody = {
         ...user,
         imagen: userImage || undefined,
       };
       if (newPassword) {
-        updateBody.password = encryptedPassword;
+        updateBody.password = newPassword; // Enviar en texto plano
       }
       const res = await fetch('/api/dashboard/usuario', {
         method: 'PUT',
