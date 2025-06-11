@@ -11,6 +11,11 @@ const JWT_SECRET = process.env.JWT_SECRET || 'A9f$2kL!zQw8@xP0#rT7^vB6&nM3*eS1%j
 function isPasswordValid(password) {
   const specialChars = /[.,\-¨\*\^¿\?=\/\·"\$%´`+]/;
   const hasUppercase = /[A-Z]/;
+  // Debug detallado
+  console.log('Password:', password);
+  console.log('Length:', password.length, '>=8:', password.length >= 8);
+  console.log('Has uppercase:', hasUppercase.test(password));
+  console.log('Has special:', specialChars.test(password));
   return (
     password.length >= 8 &&
     hasUppercase.test(password) &&
