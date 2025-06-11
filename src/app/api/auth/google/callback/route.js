@@ -47,10 +47,10 @@ export async function GET(request) {
     if (rows.length > 0) {
       user = rows[0];
     } else {
-      // Si no existe, crea usuario
+      // Si no existe, crea usuario (añadiendo apellido1 vacío)
       const [result] = await connection.execute(
-        'INSERT INTO usuarios (nombre, email, google_id, verificado, tipo) VALUES (?, ?, ?, 1, "usuario")',
-        [userInfo.name, userInfo.email, userInfo.sub]
+        'INSERT INTO usuarios (nombre, apellido1, email, google_id, verificado, tipo) VALUES (?, ?, ?, ?, 1, "usuario")',
+        [userInfo.name, '', userInfo.email, userInfo.sub]
       );
       user = {
         idusuarios: result.insertId,
@@ -69,7 +69,7 @@ export async function GET(request) {
     });
     return NextResponse.redirect(PUBLIC_URL + '/auth/login?' + params.toString());
   } catch (err) {
-  return NextResponse.redirect(PUBLIC_URL + '/auth/login?error=' + encodeURIComponent(err.message));
+    return NextResponse.redirect(PUBLIC_URL + '/auth/login?error=' + encodeURIComponent(err.message));
   } finally {
     if (connection) await connection.end();
   }
