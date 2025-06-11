@@ -7,38 +7,12 @@ import { getMysqlConfig } from '../../_db';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'A9f$2kL!zQw8@xP0#rT7^vB6&nM3*eS1%jH4+uY5=GdC8pL0sW9zX2qV7bN6mK3';
 
-// Validación de contraseña fuerte
-function isPasswordValid(password) {
-  const specialChars = /[.,\-¨\*\^¿\?=\/\·"\$%´`+]/;
-  const hasUppercase = /[A-Z]/;
-  // Debug detallado
-  console.log('Password:', password);
-  console.log('Length:', password.length, '>=8:', password.length >= 8);
-  console.log('Has uppercase:', hasUppercase.test(password));
-  console.log('Has special:', specialChars.test(password));
-  return (
-    password.length >= 8 &&
-    hasUppercase.test(password) &&
-    specialChars.test(password)
-  );
-}
-
 export async function POST(request) {
   try {
     const { nombre, apellido1, apellido2, nombreusuario, email, password } = await request.json();
 
     if (!nombre || !apellido1 || !email || !password) {
       return NextResponse.json({ message: 'Faltan campos obligatorios' }, { status: 400 });
-    }
-
-    // Debug: Imprime la contraseña recibida
-    console.log('Password recibida:', password);
-
-    // Validación de contraseña fuerte
-    if (!isPasswordValid(password)) {
-      return NextResponse.json({
-        message: 'La contraseña debe tener al menos 8 caracteres, una mayúscula y un carácter especial (.,-¨*^¿?=)/·"$%%%´`+).'
-      }, { status: 400 });
     }
 
     // Encripta la contraseña en el backend usando SHA-256
