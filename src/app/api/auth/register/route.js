@@ -26,6 +26,9 @@ export async function POST(request) {
       return NextResponse.json({ message: 'Faltan campos obligatorios' }, { status: 400 });
     }
 
+    // Debug: Imprime la contraseña recibida
+    console.log('Password recibida:', password);
+
     // Validación de contraseña fuerte
     if (!isPasswordValid(password)) {
       return NextResponse.json({
