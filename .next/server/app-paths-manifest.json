@@ -1,1 +1,11 @@
-{}
+{
+  "/api/dashboard/rutas/route": "app/api/dashboard/rutas/route.js",
+  "/api/dashboard/favorite-routes/route": "app/api/dashboard/favorite-routes/route.js",
+  "/api/dashboard/paradas/route": "app/api/dashboard/paradas/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/dashboard/usuario/route": "app/api/dashboard/usuario/route.js",
+  "/page": "app/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/auth/login/page": "app/auth/login/page.js",
+  "/dashboard/usuario/page": "app/dashboard/usuario/page.js"
+}
