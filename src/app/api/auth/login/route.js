@@ -49,6 +49,7 @@ export async function POST(request) {
       }
     });
   } catch (err) {
+    // Devuelve el error real para depuración
     return NextResponse.json({ message: 'Error en el servidor', error: err.message }, { status: 500 });
   } finally {
     if (connection) await connection.end();

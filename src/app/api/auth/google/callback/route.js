@@ -69,7 +69,7 @@ export async function GET(request) {
     });
     return NextResponse.redirect(PUBLIC_URL + '/auth/login?' + params.toString());
   } catch (err) {
-    return NextResponse.redirect(PUBLIC_URL + '/auth/login?error=DB');
+  return NextResponse.redirect(PUBLIC_URL + '/auth/login?error=' + encodeURIComponent(err.message));
   } finally {
     if (connection) await connection.end();
   }
