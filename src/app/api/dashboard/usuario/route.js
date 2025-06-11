@@ -3,9 +3,11 @@ import mysql from 'mysql2/promise';
 import { getMysqlConfig } from '../../_db';
 
 function isPasswordValid(password) {
-  // Al menos una mayúscula y un caracter especial de la lista indicada
-  const specialChars = /[,\.\-´`+'\;:_¨\*\^¿\?\{\}]/;
+  const specialChars = /[,.-´+`¡';:_¨^*?=)(/&%$·"!]/;
   const hasUppercase = /[A-Z]/;
+  console.log('Password:', password);
+  console.log('Uppercase:', hasUppercase.test(password));
+  console.log('Special:', specialChars.test(password));
   return hasUppercase.test(password) && specialChars.test(password);
 }
 
@@ -81,7 +83,7 @@ export async function PUT(request) {
       if (!isPasswordValid(password)) {
         await connection.end();
         return NextResponse.json({
-          message: 'La contraseña debe tener al menos una mayúscula y un caracter especial (,.-´`+\';:_¨*^¿?{}).'
+          message: 'La contraseña debe tener al menos una mayúscula y un caracter especial.'
         }, { status: 400 });
       }
       fields.push('password = ?');
