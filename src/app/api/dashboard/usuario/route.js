@@ -2,6 +2,13 @@ import { NextResponse } from 'next/server';
 import mysql from 'mysql2/promise';
 import { getMysqlConfig } from '../../_db';
 
+function isPasswordValid(password) {
+  // Al menos una mayúscula y un caracter especial de la lista indicada
+  const specialChars = /[,\.\-´`+'\;:_¨\*\^¿\?\{\}]/;
+  const hasUppercase = /[A-Z]/;
+  return hasUppercase.test(password) && specialChars.test(password);
+}
+
 export async function GET(request) {
   // Obtén el idusuarios desde la query (?id=) o desde headers (mejor si usas JWT real)
   const { searchParams } = new URL(request.url);
@@ -70,6 +77,13 @@ export async function PUT(request) {
       values.push(imagen);
     }
     if (password && password.trim() !== '') {
+      // Validación de contraseña
+      if (!isPasswordValid(password)) {
+        await connection.end();
+        return NextResponse.json({
+          message: 'La contraseña debe tener al menos una mayúscula y un caracter especial (,.-´`+\';:_¨*^¿?{}).'
+        }, { status: 400 });
+      }
       fields.push('password = ?');
       values.push(password);
     }
